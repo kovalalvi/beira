@@ -2,3 +2,6 @@ data/
 notebook/wandb/
 utils/old/
 notebook/old/
+
+.ipynb_checkpoints
+
