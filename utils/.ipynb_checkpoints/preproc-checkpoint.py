@@ -3,7 +3,17 @@ import numpy as np
 import pandas as pd 
 
 
-
+def downsample_ts(data, factor=1, axis = -1): 
+    data_ds = mne.filter.resample(data, 
+                                 up=1, 
+                                 down=factor, 
+                                 axis = -1)
+    return data_ds
+def downsample_dataset(dataset, factor=1, axis =-1):
+    x, y = dataset
+    x_ds = downsample_ts(x, factor, axis)
+    y_ds = downsample_ts(y, factor, axis)
+    return (x_ds,y_ds) 
 
 
 
