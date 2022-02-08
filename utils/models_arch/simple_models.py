@@ -4,8 +4,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sklearn
 
-from tqdm.notebook import tqdm 
-
+from tqdm import tqdm 
+    
+import sklearn
+from sklearn.linear_model import LinearRegression, ElasticNet, Lasso, Ridge
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.utils.fixes import loguniform
+from sklearn.kernel_ridge import KernelRidge
 
 def cosine_distance(a, b): 
     """
@@ -202,3 +207,85 @@ class IterativeLassoRegressor:
     
     def get_weights(self):
         return sefl.time_freq_filter, self.spatial_filter
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+def corr_metric(x, y):
+    """
+    x and y - 1D vectors
+    """
+    assert x.shape == y.shape  
+    r = np.corrcoef(x, y)[0, 1]
+    return r
+
+
+def train_simple_model(model_creation_func, train_data, val_data):
+    """
+    model_creation_func - function of creation simple model
+    This model shoud predict only one roi.
+    for example Ridge regression 
+    """
+    X_train, y_train = train_data
+    X_test, y_test = val_data
+    
+    models = []
+    corr_train = []
+    corr_test = []
+    y_hats = []
+    
+    for roi in tqdm(range(y_train.shape[-1])):
+        y_train_roi = y_train[:, roi]
+        y_test_roi = y_test[:, roi]
+        
+        model = model_creation_func()
+        model.fit(X_train, y_train_roi)
+    
+        y_hat_train = model.predict(X_train)
+        y_hat = model.predict(X_test)
+    
+        corr_train_tmp = corr_metric(y_hat_train, y_train_roi)
+        corr_tmp = corr_metric(y_hat, y_test_roi)
+
+        corr_train.append(corr_train_tmp)
+        corr_test.append(corr_tmp)
+        y_hats.append(y_hat)
+        models.append(model)
+    
+    return models, np.array(corr_train), np.array(corr_test), np.stack(y_hats)
+
+
+
+def get_model_iterative_ridge():
+    clf = models.IterativeRidgeRegressor(n_electrode=n_electodes,
+                                         n_time_freq=int(n_time_steps*n_freqs), 
+                                         alphas=[10, 800],
+                                         max_iter=100,
+                                         epsilon=0.001, 
+                                         max_iter_regr=1000,
+                                         solver = 'auto')
+    return clf
+
+
+def get_Ridge_init_func(alpha = 10):
+    print(alpha)
+    def get_empty_ridge():
+        clf = Ridge(alpha=alpha, fit_intercept=False)
+        return clf
+    return get_empty_ridge
+
+def get_Lasso_init_func(alpha = 10):
+    print(alpha)
+    def get_empty_lasso():
+        clf = Lasso(fit_intercept=False, alpha=alpha,
+                   max_iter=500, selection='random')
+        return clf
+    return get_empty_lasso

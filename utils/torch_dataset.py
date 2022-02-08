@@ -2,7 +2,7 @@
 from torch.utils.data import Dataset, TensorDataset
 from torch.utils.data import DataLoader, Subset
 import numpy as np
-
+from tqdm import tqdm
 
 
 class CreateDataset_eeg_fmri(Dataset):
@@ -44,11 +44,24 @@ class CreateDataset_eeg_fmri(Dataset):
         eeg = self.x[..., start:end]
         
         if self.to_many:
-            fmri = self.y[..., end-1]
-        else:
             fmri = self.y[..., start:end]
-
+        else:
+            fmri = self.y[..., end-1]
         return (eeg, fmri)
     
-    def get_full_dataset(self):
+    def get_full_dataset(self,inp_stride=1, step=1):
+        """
+        step - step between starting points neighbour points 
+        inp_stride - take input with some stride( downsample additional). 
+        """
+        x_list = []
+        y_list = []
+        for idx in tqdm(range(0, len(self), step)):
+            data = self[idx]
+            x_list.append(data[0][..., ::inp_stride])
+            y_list.append(data[1])
+        x_list = np.array(x_list)
+        y_list = np.array(y_list)
+        return x_list, y_list 
+        
         return 
