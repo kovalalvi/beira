@@ -277,7 +277,7 @@ def get_model_iterative_ridge():
 
 def get_Ridge_init_func(alpha = 10):
     print(alpha)
-    def get_empty_ridge():
+    def get_empty_ridge(alpha = alpha):        
         clf = Ridge(alpha=alpha, fit_intercept=False)
         return clf
     return get_empty_ridge

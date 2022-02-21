@@ -5,11 +5,22 @@ import torch
 
 from tqdm.notebook import tqdm 
 
+
+def PSNR(original, compressed):
+    mse = np.mean((original - compressed) ** 2)
+    if(mse == 0):  # MSE is zero means no noise is present in the signal .
+                  # Therefore PSNR have no importance.
+        return 100
+    # max_pixel = np.max([np.max(original), np.max(compressed)])
+    max_pixel = np.max(original)
+    psnr = 20 * np.log10(max_pixel / np.sqrt(mse))
+    return psnr
+
 def corr_metric(x, y):
     """
     x and y - 1D vectors
     """
-    assert x.shape == y.shape  
+    assert x.shape == y.shape,  f'{x.shape} and {y.shape}'
     r = np.corrcoef(x, y)[0, 1]
     return r
 
@@ -80,6 +91,27 @@ def corr_results_plot(labels, corrs):
     return fig_bars
 
 
+def calculate_corrs(y_prediction, y_test):
+    """
+    Calculate correlation metrics for each roi between y_pred and y_test.
+    Visaulize via n_roi plots 
+    
+    ------
+    Input:
+        y_prediction - roi, time, 
+        y_test - (roi, time) 
+        labels - list name of roi
+        
+    Output
+        corrs - list of correaltions.
+    """
+    corrs = []
+    for roi in range(y_test.shape[0]):
+        y_hat = y_prediction[roi]
+        y_test_roi = y_test[roi]
+        corr_tmp = corr_metric(y_hat, y_test_roi)
+        corrs.append(corr_tmp)
+    return corrs
 def make_visualization(y_prediction, y_test, labels):
     """
     Calculate correlation metrics for each roi between y_pred and y_test.
@@ -111,7 +143,9 @@ def make_visualization(y_prediction, y_test, labels):
         axi.set_title("{}_corr {:.2f}".format(labels[roi], corr_tmp))
     return fig, corrs
 
-def make_inference_seq_2_seq(model, dataset, labels, device = 'cpu'):
+
+
+def make_inference_seq_2_seq(model, dataset, device = 'cpu'):
     """
     Make inference for model many2many. So we take sequency of input data and get sequence of output.
     Then we compare prediction and real output. 
@@ -132,8 +166,7 @@ def make_inference_seq_2_seq(model, dataset, labels, device = 'cpu'):
         model output  - [batch, n_roi, time]
         
     Output:
-        fig - output of make visualization function. 
-        corrs - list of corr n_roi lenght
+        y_hat
         
     """
     
@@ -156,19 +189,15 @@ def make_inference_seq_2_seq(model, dataset, labels, device = 'cpu'):
 
         y_hat = model(x_batch)[0]
         y_hat = y_hat.to('cpu').detach().numpy()
-
-    fig, corrs = make_visualization(y_hat, 
-                                    y_test, 
-                                    labels = labels)
     
-    return fig, corrs
+    return y_hat, y_test
         
     
     
 
     
     
-def make_inference_seq_2_one(model, dataset,  labels, device = 'cpu'):
+def make_inference_seq_2_one(model, dataset, device = 'cpu'):
     """
     
     
@@ -198,7 +227,7 @@ def make_inference_seq_2_one(model, dataset,  labels, device = 'cpu'):
         model = model.to(device)
         model.eval()
         
-        for start in range(0, max_start):
+        for start in range(0, max_start+1):
             
             end = start+window_size
             X_test = x[..., start:end]
@@ -210,12 +239,11 @@ def make_inference_seq_2_one(model, dataset,  labels, device = 'cpu'):
             y_hat = y_hat.to('cpu').detach().numpy()
             y_hats.append(y_hat)
 
-    y_hats = np.stack(y_hats)
-    fig, corrs = make_visualization(y_hats, 
-                                    y_test, 
-                                    labels = labels)
+    y_hats = np.stack(y_hats, axis =-1)
     
-    return fig, corrs
+    
+    
+    return y_hats, y_test
 
 
 
@@ -235,15 +263,14 @@ def model_inference_function(model, dataset,
     corrs - correlations.
     """
     if to_many:
-        fig, corrs = make_inference_seq_2_seq(model, dataset, 
-                                                labels=labels, 
-                                                device=device)
+        y_hats, y_test = make_inference_seq_2_seq(model, dataset, device=device)
     else:
-        fig, corrs = make_inference_seq_2_one(model, dataset, 
-                                                labels=labels, 
-                                                device=device)
-        
+        y_hats, y_test = make_inference_seq_2_one(model, dataset, device=device)
+    
+    
+    fig, corrs = make_visualization(y_hats, y_test, labels = labels)
     fig_bars = corr_results_plot(labels=labels, corrs=corrs)
+    
     return fig, fig_bars, corrs
 
 

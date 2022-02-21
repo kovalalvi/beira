@@ -6,6 +6,8 @@ import torch.nn.functional as F
 import wandb
 import numpy as np
 import os
+import matplotlib.pyplot as plt
+
 
 
 def make_complex_loss_function(weight_cos_loss=0):
@@ -50,6 +52,16 @@ def make_mse_loss():
         return mse_loss, cos_dist
     return loss_func
 
+
+def make_mae_loss():
+    criterion = nn.L1Loss()
+    cos_metric = nn.CosineSimilarity(dim=-1, eps=1e-08)
+
+    def loss_func(y_hat, y_batch):
+        mae_loss = criterion(y_hat, y_batch)
+        cos_dist = torch.mean(cos_metric(y_hat, y_batch))
+        return mae_loss, cos_dist
+    return loss_func
 
 
 
@@ -123,8 +135,8 @@ def wanb_train_regression(EPOCHS, model, train_loader, val_loader,
 
                 y_hat_val = model(x_batch_val)
                 losses_val = loss_function(y_hat_val, y_batch_val)
-
-                for i in range(num_losses):
+                
+                for i in range(len(losses_val)):
                     sum_losses_val[i] = sum_losses_val[i] + losses_val[i].item()
 
             ### add to wanb all losses.
@@ -143,6 +155,8 @@ def wanb_train_regression(EPOCHS, model, train_loader, val_loader,
             wandb.log({"val_viz/plot_ts_image": wandb.Image(fig)}, epoch)
             wandb.log({"val_viz/plot_corrs": wandb.Image(fig_bars)}, epoch)   
             wandb.log({"val/corr_mean": np.mean(corrs)}, epoch)
+            plt.close(fig)
+            plt.close(fig_bars)
             
 
 
