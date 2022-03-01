@@ -82,7 +82,7 @@ def normalize_data(data, means_stds=None):
 def preproc_dataset(dataset, fps, freqs, crop_size=None,
                     inp_means_stds=None, out_means_stds=None):
     """
-    Common reference reasignmment.
+    Common reference rereferencing.
     Filter.
     Extract features.
     dataset -  ( eeg (64, 146460) ,  fmri (21, 146460) )
@@ -95,15 +95,15 @@ def preproc_dataset(dataset, fps, freqs, crop_size=None,
     ## eeg preproc
     
     # subtract common average.
-    common_average = np.mean(eeg_filter, axis=0, keepdims=True)
-    eeg_filter = eeg_filter - common_average
+    common_average = np.mean(eeg_arrays, axis=0, keepdims=True)
+    eeg_arrays = eeg_arrays - common_average
     
     
     # filter eeg data.
     eeg_filter = mne.filter.filter_data(eeg_arrays, sfreq=fps, 
                                         l_freq=0.1, h_freq=100, 
                                        verbose=False)
-    eeg_filter = filter_powerline_noise(eeg_arrays, sf=fps, verbose=False)
+    eeg_filter = filter_powerline_noise(eeg_filter, sf=fps, verbose=False)
 
 
     
@@ -113,11 +113,8 @@ def preproc_dataset(dataset, fps, freqs, crop_size=None,
 
     
     # extract time freq representation.
-    eeg_wavelet, freqs = compute_wavelet(eeg_filter, sf=fps, freqs=freqs)
+    eeg_wavelet_features, freqs = compute_wavelet(eeg_filter, sf=fps, freqs=freqs)
     
-    # desired size. 
-    # eeg_wavelet_features = eeg_wavelet.reshape(-1, eeg_wavelet.shape[-1])
-    eeg_wavelet_features = eeg_wavelet
     
     # remove bound.wavelent artifacts. 
     if crop_size is not None: 

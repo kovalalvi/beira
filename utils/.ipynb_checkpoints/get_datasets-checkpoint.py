@@ -256,7 +256,7 @@ def download_cwl_dataset(patient, path_to_dataset,
         print('Dimension of our fMRi Roi data: ', df_fmri.shape)
         
         print('fMRI info : ', t_r)
-        print('RoI: ', labels_roi)
+        print('RoI: ', df_fmri.columns.to_list())
 
     return df_eeg, df_fmri, df_fmri.drop(['time'], 1).columns.to_list()
 
