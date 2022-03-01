@@ -137,14 +137,16 @@ def extract_oxford_roi_cwl(fmri_img, t_r,
     
     Return :
         RoI - (time, n_ROI)
-        labels - background + n_ROI 
+        labels - n_ROI 
     """
     
     # calculate mask of brain to extract global signal
     mean_img = image.mean_img(fmri_img)
     mask = masking.compute_epi_mask(mean_img)
     masker_global_signal = NiftiLabelsMasker(mask, 'global_signal',
-                                         detrend = False, standardize=False)
+                                             detrend = False,
+                                             standardize=False, 
+                                             t_r = t_r)
 
     ts_global_signal = masker_global_signal.fit_transform(fmri_img)
      
@@ -243,6 +245,10 @@ def download_cwl_dataset(patient, path_to_dataset,
     df_fmri = pd.DataFrame(fmri_roi, columns=labels_roi)
     df_fmri = df_fmri[:len(times_fmri)]
     df_fmri['time'] = times_fmri
+    df_fmri = df_fmri.drop(columns = ['Left Cerebral White Matter', 'Left Cerebral Cortex ', 
+                             'Right Cerebral White Matter', 'Right Cerebral Cortex '])
+    
+    
 
     if verbose:
         print('Dimension of our EEG data: ', df_eeg.shape)
@@ -252,7 +258,7 @@ def download_cwl_dataset(patient, path_to_dataset,
         print('fMRI info : ', t_r)
         print('RoI: ', labels_roi)
 
-    return df_eeg, df_fmri, labels_roi
+    return df_eeg, df_fmri, df_fmri.drop(['time'], 1).columns.to_list()
 
 
 
@@ -279,7 +285,6 @@ def retrive_times_fmri_noddi(raw):
 
     times_fmri = np.array(times_fmri)
     times_fmri = times_fmri * 1000  # seconds to milliseconds
-    # times_fmri = times_fmri.astype('int')
     
     return times_fmri
 
@@ -304,7 +309,7 @@ def extract_oxford_roi_noddi(fmri_img, t_r,
 
     Return :
         RoI - (time, n_ROI)
-        labels - background + n_ROI 
+        labels - n_ROI 
     """
 
 
@@ -321,11 +326,19 @@ def extract_oxford_roi_noddi(fmri_img, t_r,
     if remove_confounds:
         # process tsv file with condounds after fmriprep
         # choose tha main confounds from approx 200.
-        confounds_list = ['global_signal', 'csf', "white_matter", 
+        # confounds_list = ['global_signal', 'csf', "white_matter", 
+        #                   "trans_x","trans_y",'trans_z',
+        #                   'rot_x', 'rot_y', 'rot_z']
+
+
+        
+        
+        confounds_list = [ 'global_signal',
                           "trans_x","trans_y",'trans_z',
                           'rot_x', 'rot_y', 'rot_z']
         confounds_all = pd.read_csv(motion_params_path,  sep='\t', header=0)
         confounds = confounds_all[confounds_list]
+        
     else: 
         confounds = None
 
@@ -414,6 +427,10 @@ def download_bids_noddi_dataset(patient, path_to_dataset, remove_confounds=True,
     df_fmri = pd.DataFrame(fmri_roi, columns=labels_roi)
     df_fmri = df_fmri[:len(times_fmri)]
     df_fmri['time'] = times_fmri
+    
+    
+    df_fmri = df_fmri.drop(columns = ['Left Cerebral White Matter', 'Left Cerebral Cortex ', 
+                             'Right Cerebral White Matter', 'Right Cerebral Cortex '])
        
     
     if verbose:
@@ -423,7 +440,7 @@ def download_bids_noddi_dataset(patient, path_to_dataset, remove_confounds=True,
         print('Dimension of our fMRi Roi data: ', df_fmri.shape)
         
         print('fMRI info:', fmri_info)
-        print('RoI: ', labels_roi)
+        print('RoI: ', df_fmri.columns.to_list())
     
-    return df_eeg, df_fmri, labels_roi
+    return df_eeg, df_fmri, df_fmri.drop(columns = ['time']).columns.to_list()
 

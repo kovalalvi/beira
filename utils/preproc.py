@@ -4,10 +4,12 @@ import pandas as pd
 
 
 def downsample_ts(data, factor=1, axis = -1): 
+    if factor==1:
+        return data
     data_ds = mne.filter.resample(data, 
                                  up=1, 
                                  down=factor, 
-                                 axis = -1)
+                                 axis=-1)
     return data_ds
 def downsample_dataset(dataset, factor=1, axis =-1):
     x, y = dataset
@@ -77,7 +79,7 @@ def normalize_data(data, means_stds=None):
     return transform_data, means_stds
 
 
-def preproc_dataset(dataset, fps, freqs=np.linspace(2, 100, 16), crop_size=None,
+def preproc_dataset(dataset, fps, freqs, crop_size=None,
                     inp_means_stds=None, out_means_stds=None):
     """
     Common reference reasignmment.
@@ -91,26 +93,26 @@ def preproc_dataset(dataset, fps, freqs=np.linspace(2, 100, 16), crop_size=None,
     
     
     ## eeg preproc
+    
+    # subtract common average.
+    common_average = np.mean(eeg_filter, axis=0, keepdims=True)
+    eeg_filter = eeg_filter - common_average
+    
+    
     # filter eeg data.
     eeg_filter = mne.filter.filter_data(eeg_arrays, sfreq=fps, 
-                                        l_freq=0.5, h_freq=100, 
+                                        l_freq=0.1, h_freq=100, 
                                        verbose=False)
     eeg_filter = filter_powerline_noise(eeg_arrays, sf=fps, verbose=False)
 
 
-    # subtract common average.
-    common_average = np.median(eeg_filter, axis=0, keepdims=True)
-    eeg_filter = eeg_filter - common_average
-    
     
     # normalize data 
-    eeg_filter, inp_means_stds = normalize_data(eeg_filter, inp_means_stds)
-    fmri_arrays, out_means_stds = normalize_data(fmri_arrays, out_means_stds)
+    # eeg_filter, inp_means_stds = normalize_data(eeg_filter, inp_means_stds)
+    # fmri_arrays, out_means_stds = normalize_data(fmri_arrays, out_means_stds)
 
     
-    
     # extract time freq representation.
-    
     eeg_wavelet, freqs = compute_wavelet(eeg_filter, sf=fps, freqs=freqs)
     
     # desired size. 
