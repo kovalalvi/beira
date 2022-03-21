@@ -49,7 +49,6 @@ class Block1D(nn.Module):
         self.norm = nn.InstanceNorm1d(out_channels, affine=False) # no trainable
         
     def forward(self, x):
-        x = self.downsample(x)
         
         x = self.conv1d(x)
         x = self.activation(x)
@@ -57,6 +56,9 @@ class Block1D(nn.Module):
         x_branch = self.conv_branch(x)
         
         x = self.norm(x_branch + x)
+        
+        x = self.downsample(x)
+
 
         return x
         
@@ -68,10 +70,10 @@ class UpsampleConvBlock(nn.Module):
         self.upsample = nn.Upsample(scale_factor=scale, mode='linear')
         self.conv_block = Block1D(in_channels, out_channels, kernel_size)
             
-    def forward(self, x_small):
+    def forward(self, x):
         
-        x_upsample = self.upsample(x_small)
-        x = self.conv_block(x_upsample)
+        x = self.conv_block(x)
+        x = self.upsample(x)
         
         return x
         
@@ -86,12 +88,7 @@ class AutoEncoder1D(nn.Module):
     3. Decode information using cat pass from previous levels.
     4. Map to only 21 ROI
     
-    hp_autoencoder = dict(  n_res_block = 0, 
-                            channels = [32, 32, 64, 64], 
-                            kernel_sizes = [15, 11, 5, 5],
-                            strides= [8, 8, 4],
-                            n_channels_out = 21,
-                            n_channels_inp = 900)
+
 
 
     model = AutoEncoder1D(**hp_autoencoder)
@@ -104,7 +101,7 @@ class AutoEncoder1D(nn.Module):
                  n_freqs = 16,
                  n_channels_out=21,
                  n_res_block=1,
-                 channels = [8, 16, 32], 
+                 channels = [8, 16, 32, 32], 
                  kernel_sizes=[3, 3, 3],
                  strides=[4, 4, 4]):
         
@@ -118,10 +115,11 @@ class AutoEncoder1D(nn.Module):
         
         ## factorized features reducing
         # electrodes spatial reducing
-        self.spatial_reduce_2d = nn.Conv2d(self.n_electrodes, 16, kernel_size=1)
+        self.spatial_reduce_2d = nn.Conv2d(self.n_electrodes, self.n_electrodes//2, kernel_size=1)
         
         # freqs-electrodes  reducing to channels[0].
-        self.spatial_reduce = nn.Conv1d(16*self.n_freqs, channels[0], kernel_size=1)
+        self.spatial_reduce = nn.Conv1d(self.n_electrodes//2*self.n_freqs,
+                                        channels[0], kernel_size=1)
         
         
         # create downsample blcoks in Sequentional manner.
@@ -129,7 +127,7 @@ class AutoEncoder1D(nn.Module):
                                                         channels[i+1], 
                                                         kernel_sizes[i],
                                                         stride=strides[i], 
-                                                        dilation=2) for i in range(self.model_depth)])
+                                                        dilation=1) for i in range(self.model_depth)])
         
         
         # mapping in latent space

@@ -8,35 +8,55 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
+import geoopt
 
+def make_complex_loss_function(mse_weight = 0., corr_weight = 0., manifold_weight = 0., bound=1):
+    
+    mse_loss = nn.MSELoss()
+    cos_sim = nn.CosineSimilarity(dim=-1, eps=1e-08)
+    spd_manifold = geoopt.SymmetricPositiveDefinite()
+    
+    
+    def loss_func(y_hat, y_true):
+        """
+        y.shape [batch, roi, time]
+        """
+        
+        batch = y_hat.shape[0]
+        # L1/L1 loss.
+        mse = mse_loss(y_hat[..., bound:-bound], y_true[..., bound:-bound])
 
-def make_complex_loss_function(weight_cos_loss=0):
-    criterion = nn.MSELoss()
-    cos_metric = nn.CosineSimilarity(dim=-1, eps=1e-08)
-    
-    bound = 2048//8
-    
-    def loss_func(y_hat, y_batch):
-        
-        # apply bound for =- 1 sec error in choosing time delay.
-        mse_loss = criterion(y_hat[:, :, bound:-bound], y_batch[:, :, bound:-bound])
-        
-        # cosine sim loss
-        cos_sim = torch.mean(cos_metric(y_hat, y_batch))
-        cos_loss = -cos_sim
-        
-        # covariance
+        # Correlation 
+        y_hat_centre = y_hat - torch.mean(y_hat, -1, keepdim=True)
+        y_true_centre = y_true - torch.mean(y_true, -1, keepdim=True)
+
+        corrs = cos_sim( y_hat_centre, y_true_centre)
+        corr = torch.mean(corrs)
+        corr = torch.nan_to_num(corr, nan=0.0)
+
+        corr_neg = -corr
+
+        # Manifold covariance loss
+
         cov_matrix_hat = torch.stack([torch.cov(y_) for y_ in y_hat])
-        cov_matrix_hat = torch.triu(cov_matrix_hat, diagonal=0)
+        cov_matrix_true = torch.stack([torch.cov(y_) for y_ in y_true])
 
-        cov_matrix = torch.stack([torch.cov(y_) for y_ in y_batch])
-        cov_matrix = torch.triu(cov_matrix, diagonal=0)
+        man_dists = []
+        for batch in range(batch):
 
-        cov_diff_loss = torch.mean((cov_matrix_hat - cov_matrix)**2)
+            man_dist = spd_manifold.dist(x=cov_matrix_hat[batch] , 
+                                         y= cov_matrix_true[batch])
+            man_dists.append(man_dist)
+
+        manifold_distance = torch.mean(torch.stack(man_dists))
+        manifold_distance = torch.clip(manifold_distance, 0, 100) # values might be very big
         
-        
-        all_loss = mse_loss + weight_cos_loss * cos_loss
-        return all_loss, cos_sim, mse_loss
+        manifold_distance = torch.nan_to_num(manifold_distance, nan=0.0)
+
+
+        total_loss = mse_weight * mse + corr_weight * corr_neg + manifold_weight * manifold_distance
+
+        return total_loss, corr, mse, manifold_distance
     return loss_func
 
 
@@ -48,7 +68,11 @@ def make_mse_loss():
 
     def loss_func(y_hat, y_batch):
         mse_loss = criterion(y_hat, y_batch)
-        cos_dist = torch.mean(cos_metric(y_hat, y_batch))
+        
+        y_hat_centre = y_hat - torch.mean(y_hat, -1, keepdim=True)
+        y_true_centre = y_batch - torch.mean(y_batch, -1, keepdim=True)
+        
+        cos_dist = torch.mean(cos_metric(y_hat_centre, y_true_centre))
         return mse_loss, cos_dist
     return loss_func
 
@@ -82,14 +106,14 @@ def train_step(x_batch, y_batch, model, optimizer, loss_function, scheduler=None
 def wanb_train_regression(EPOCHS, model, train_loader, val_loader,
                                  loss_function, train_step, optimizer,
                                  device, raw_test_data, labels, inference_function,
-                                 to_many,
+                                 to_many,scheduler = None,
                                  show_info=1, num_losses=10):
     """
     Train model with train_loader.  
     
     
     """
-    min_loss = 10000000000
+    max_cos_val = -1
     batch_size = train_loader.batch_size
     
     # X_test, y_test = raw_test_data
@@ -143,20 +167,31 @@ def wanb_train_regression(EPOCHS, model, train_loader, val_loader,
             mean_losses = [loss/(counter+1) for loss in sum_losses]
             mean_losses_val = [loss/(counter_val+1) for loss in sum_losses_val]
             
+            if scheduler is not None: 
+                scheduler.step(mean_losses_val[1])
+            
             for i in range(num_losses):
                 wandb.log({"train/loss_" + str(i): mean_losses[i]}, epoch) 
                 wandb.log({'val/loss_' + str(i): mean_losses_val[i]}, epoch) 
             
             
-            fig, fig_bars, corrs = inference_function(model, raw_test_data, 
-                                                  labels=labels, 
-                                                  device=device, to_many=to_many)
-            
-            wandb.log({"val_viz/plot_ts_image": wandb.Image(fig)}, epoch)
-            wandb.log({"val_viz/plot_corrs": wandb.Image(fig_bars)}, epoch)   
-            wandb.log({"val/corr_mean": np.mean(corrs)}, epoch)
-            plt.close(fig)
-            plt.close(fig_bars)
+            # inference only when cosine distance imroves. 
+            if max_cos_val < mean_losses_val[1]:
+                max_cos_val = mean_losses_val[1]
+                
+                fig, fig_bars, corrs = inference_function(model, raw_test_data, 
+                                                          labels=labels, 
+                                                          device=device, 
+                                                          to_many=to_many)
+
+                wandb.log({"val_viz/plot_ts_image": wandb.Image(fig)}, epoch)
+                wandb.log({"val_viz/plot_corrs": wandb.Image(fig_bars)}, epoch)   
+                wandb.log({"val/corr_mean": np.mean(corrs)}, epoch)
+                plt.close(fig)
+                plt.close(fig_bars)
+                
+                # to do 
+                # save model in that case. 
             
 
 

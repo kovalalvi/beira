@@ -390,8 +390,11 @@ def download_bids_noddi_dataset(patient, path_to_dataset, remove_confounds=True,
     
     ## EEG preprocessing
     raw = mne.io.read_raw_brainvision(eeg_preproc_path, preload=True, verbose=False)      
-    df_eeg = raw.to_data_frame()
-   
+    raw.set_channel_types({'ECG': 'ecg'})
+    raw, betas = mne.preprocessing.regress_artifact(raw, picks_artifact='ecg', verbose=True)
+    
+    df_eeg = raw.to_data_frame(picks='eeg')
+    
     ## fMRI processing 
     # get info about fmri data. 
     fmri_info = json.load(open(fmri_desc_path))
@@ -442,5 +445,5 @@ def download_bids_noddi_dataset(patient, path_to_dataset, remove_confounds=True,
         print('fMRI info:', fmri_info)
         print('RoI: ', df_fmri.columns.to_list())
     
-    return df_eeg, df_fmri, df_fmri.drop(columns = ['time']).columns.to_list()
+    return raw, df_eeg, df_fmri, df_fmri.drop(columns = ['time']).columns.to_list()
 

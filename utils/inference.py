@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd 
 import torch 
-
+import math
 from tqdm.notebook import tqdm 
 
 
@@ -129,7 +129,11 @@ def make_visualization(y_prediction, y_test, labels):
         fig - bar plot
         corrs - list of correaltions.
     """
-    fig, ax = plt.subplots(7, 3, figsize = (10, 15), sharex=True, sharey=True)
+    n_roi = y_prediction.shape[0]
+    
+    fig, ax = plt.subplots(math.ceil(n_roi/3), 3, figsize = (10, int(math.ceil(n_roi/3)*2)),
+                           dpi=120,
+                           sharex=True, sharey=True)
     corrs = []
     for roi in range(len(labels)):
         y_hat = y_prediction[roi]
@@ -173,24 +177,52 @@ def make_inference_seq_2_seq(model, dataset, device = 'cpu'):
     
     x, y = dataset
     
+
+    ## prediction. 
     with torch.no_grad():
         
         model = model.to(device)
         model.eval()
         
-        bound = x.shape[-1]//1024*1024
+        bound = x.shape[-1]//1024 * 1024
         
         X_test = x[..., :bound]
         y_test = y[..., :bound]
+        
+       # if model have attribute window size we apply window sliding.
+        try:
+            window_size = model.window_size
+            make_window_sliding = True
+        except:
+            make_window_sliding = False
+        
+        if make_window_sliding:
+            y_hats = []
+            for start in range(0, bound, window_size):
+                
+                end = start+window_size
+                X_test = x[..., start:end]
 
+                x_batch = torch.from_numpy(X_test).float().to(device)
+                x_batch = torch.unsqueeze(x_batch, 0)
 
-        x_batch = torch.from_numpy(X_test).float().to(device)
-        x_batch = torch.unsqueeze(x_batch, 0)
+                y_hat = model(x_batch)[0]
+                y_hat = y_hat.to('cpu').detach().numpy()
+                
+                y_hats.append(y_hat)
+                
+            y_hats = np.concatenate(y_hats, axis =-1)
+            
+        else:
+            x_batch = torch.from_numpy(X_test).float().to(device)
+            x_batch = torch.unsqueeze(x_batch, 0)
 
-        y_hat = model(x_batch)[0]
-        y_hat = y_hat.to('cpu').detach().numpy()
-    
-    return y_hat, y_test
+            y_hat = model(x_batch)[0]
+            y_hats = y_hat.to('cpu').detach().numpy()
+
+        
+        
+    return y_hats, y_test
         
     
     

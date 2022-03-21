@@ -78,7 +78,23 @@ def normalize_data(data, means_stds=None):
     
     return transform_data, means_stds
 
+def low_level_preproc_eeg(eeg, fps):
+    """
+    Apply filtering and common rereference.
+    eeg should be size ( n_electrodes, time)
+    fps - Hz 
+    """
+    eeg_filter = filter_powerline_noise(eeg, sf=fps, verbose=False)
+    eeg_filter = mne.filter.filter_data(eeg_filter, sfreq=fps, 
+                                        l_freq=1, h_freq=100, 
+                                        verbose=False)
+    
+    common_average = np.mean(eeg_filter, axis=0, keepdims=True)
+    eeg_filter = eeg_filter - common_average
+    
+    return eeg_filter
 
+    
 def preproc_dataset(dataset, fps, freqs, crop_size=None,
                     inp_means_stds=None, out_means_stds=None):
     """
@@ -94,32 +110,28 @@ def preproc_dataset(dataset, fps, freqs, crop_size=None,
     
     ## eeg preproc
     
-    # subtract common average.
-    common_average = np.mean(eeg_arrays, axis=0, keepdims=True)
-    eeg_arrays = eeg_arrays - common_average
-    
-    
+
     # filter eeg data.
-    eeg_filter = mne.filter.filter_data(eeg_arrays, sfreq=fps, 
-                                        l_freq=0.1, h_freq=100, 
-                                       verbose=False)
-    eeg_filter = filter_powerline_noise(eeg_filter, sf=fps, verbose=False)
-
-
+    eeg_filter = filter_powerline_noise(eeg_arrays, sf=fps, verbose=False)
+    eeg_filter = mne.filter.filter_data(eeg_filter, sfreq=fps, 
+                                        l_freq=1, h_freq=100, 
+                                        verbose=False)
     
+    # subtract common average.
+    common_average = np.mean(eeg_filter, axis=0, keepdims=True)
+    eeg_filter = eeg_filter - common_average
+    
+
     # normalize data 
     # eeg_filter, inp_means_stds = normalize_data(eeg_filter, inp_means_stds)
-    # fmri_arrays, out_means_stds = normalize_data(fmri_arrays, out_means_stds)
+    fmri_arrays, out_means_stds = normalize_data(fmri_arrays, out_means_stds)
 
     
     # extract time freq representation.
-    eeg_wavelet_features, freqs = compute_wavelet(eeg_filter, sf=fps, freqs=freqs)
-    
+    # eeg_wavelet_features, freqs = compute_wavelet(eeg_filter, sf=fps, freqs=freqs)
+    eeg_wavelet_features = eeg_filter
     
     # remove bound.wavelent artifacts. 
-    if crop_size is not None: 
-        eeg_wavelet_features = eeg_wavelet_features[:, int(crop_size)*fps: -int(crop_size)*fps]
-        fmri_arrays = fmri_arrays[:, int(crop_size)*fps: -int(crop_size)*fps]
     
     print(f"Size of eeg features {eeg_wavelet_features.shape} | fmri {fmri_arrays.shape}")
     return (eeg_wavelet_features, fmri_arrays), freqs, inp_means_stds, out_means_stds
