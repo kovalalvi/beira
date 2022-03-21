@@ -19,6 +19,12 @@ Structure.
 
 
 **Examples** 
+- Features: Wavlets
 - Model: 1D AutoEncoder. 
 - Loss: Corr + MSE + Manifold-based
 ![ts_all_losses](https://user-images.githubusercontent.com/55140479/159255531-e3e53d2e-d195-4e37-a66f-6635c3b007c3.png)
+
+
+- Model. 1D AutoEncoder. 
+- Loss: MSE
+![ts_combine_features](https://user-images.githubusercontent.com/55140479/159255803-222d12f9-b503-4cc8-9413-9fc7281e54f7.png)
