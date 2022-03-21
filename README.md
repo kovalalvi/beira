@@ -18,4 +18,7 @@ Structure.
   - Wav2Vec_AE_CWL_Loss_all.ipynb - It is notebook which I use as template for experiments. 
 
 
-Examples 
+**Examples** 
+- Model: 1D AutoEncoder. 
+- Loss: Corr + MSE + Manifold-based
+![ts_all_losses](https://user-images.githubusercontent.com/55140479/159255531-e3e53d2e-d195-4e37-a66f-6635c3b007c3.png)
