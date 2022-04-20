@@ -102,7 +102,24 @@ def train_step(x_batch, y_batch, model, optimizer, loss_function, scheduler=None
         scheduler.step()
     return losses
 
-
+def save_checkpoint_custom(state, best_model_path):
+    """
+    Save checkpoint based on state information. Save model.state_dict() weight of models.
+    Parameters: 
+    state: torch dict weights  
+        model.state_dict()
+    best_model_path: str
+        path to save best model( copy from checkpoint_path)
+    """
+    
+    best_check = os.path.split(best_model_path)[0]
+    if not os.path.exists(best_check):
+        os.makedirs(best_check)
+    
+    torch.save(state, best_model_path)
+    
+    
+    
 def wanb_train_regression(EPOCHS, model, train_loader, val_loader,
                                  loss_function, train_step, optimizer,
                                  device, raw_test_data, labels, inference_function,
@@ -190,10 +207,12 @@ def wanb_train_regression(EPOCHS, model, train_loader, val_loader,
                 plt.close(fig)
                 plt.close(fig_bars)
                 
-                # to do 
                 # save model in that case. 
+                # save weights
+                filename = "epoch_{}_val_corr{:.2}.pt".format(epoch, np.mean(corrs))
+                filepath_name = os.path.join(run.dir, filename)
+                save_checkpoint_custom(model.state_dict(), filepath_name) 
             
-
 
         # Logging and saving
         #-------------------------------------------------------------------------------#
@@ -208,8 +227,5 @@ def wanb_train_regression(EPOCHS, model, train_loader, val_loader,
         val_loss = mean_losses_val[0]
         val_acc = mean_losses_val[1]
         
-        
-        checkpoint = model.state_dict()
-        torch.save(checkpoint, (os.path.join(wandb.run.dir, "model.h5")))
     
     return model
