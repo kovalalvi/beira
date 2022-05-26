@@ -65,7 +65,7 @@ class IterativeRidgeRegressor:
         y: nd.array
             shape N, 1
         """
-        for i in tqdm(range(self.max_iter)):
+        for i in range(self.max_iter):
             
             #---------------------------#
             # apply time freq filter and train spatial regressor
@@ -156,7 +156,7 @@ class IterativeLassoRegressor:
         y: nd.array
             shape N, 1
         """
-        for i in tqdm(range(self.max_iter)):
+        for i in range(self.max_iter):
             
             #---------------------------#
             # apply time freq filter and train spatial regressor
@@ -264,15 +264,11 @@ def train_simple_model(model_creation_func, train_data, val_data):
 
 
 
-def get_model_iterative_ridge():
-    clf = models.IterativeRidgeRegressor(n_electrode=n_electodes,
-                                         n_time_freq=int(n_time_steps*n_freqs), 
-                                         alphas=[10, 800],
-                                         max_iter=100,
-                                         epsilon=0.001, 
-                                         max_iter_regr=1000,
-                                         solver = 'auto')
-    return clf
+def get_model_iterative_ridge(params):
+    def get_model():
+        clf = IterativeRidgeRegressor(**params)
+        return clf
+    return get_model
 
 
 def get_Ridge_init_func(alpha = 10):

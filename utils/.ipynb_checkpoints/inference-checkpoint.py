@@ -72,7 +72,7 @@ def corr_results_plot(labels, corrs):
     correctness = False
     correctness =(left_df['roi_name'].str.replace('Left', '') == right_df['roi_name'].str.replace('Right', '')).all()  
 
-    fig_bars = plt.figure(figsize=(8, 8), dpi = 125)
+    fig_bars = plt.figure(figsize=(6, 6), dpi = 100)
     x = np.arange(len(left_df['corrs']))
     y1 = np.random.rand(len(x))
     y2 = np.random.rand(len(x))
@@ -83,10 +83,11 @@ def corr_results_plot(labels, corrs):
     plt.bar(x+0.2, right_df['corrs'], width, label = 'right')
     plt.xticks(x, left_df['roi_name'].str.replace('Left', ''), 
               rotation=90)
-    plt.ylim(-1, 1)
-    plt.title('Test corrs. Correctnees_visual = {}. Average corr {:.2f}'.format(str(correctness),
-                                                                                np.mean(corrs)))
+    plt.ylim(-0.2, 1)
+    plt.title('Average by regions: r = {:.2f}'.format(np.mean(corrs)))
     plt.legend()
+    fig_bars.tight_layout()
+
     
     return fig_bars
 
@@ -131,9 +132,20 @@ def make_visualization(y_prediction, y_test, labels):
     """
     n_roi = y_prediction.shape[0]
     
-    fig, ax = plt.subplots(math.ceil(n_roi/3), 3, figsize = (10, int(math.ceil(n_roi/3)*2)),
-                           dpi=120,
-                           sharex=True, sharey=True)
+    fig, ax = plt.subplots(math.ceil(n_roi/2), 2, 
+                           figsize = (8, 8) ,
+                           dpi=120, sharex=True, sharey=True)
+    
+    order = [0, 4, 1, 5, 2, 6, 3, 7]
+    
+    print(y_prediction.shape)
+    y_prediction = np.stack([y_prediction[idx] for idx in order])
+    
+    
+    y_test = np.stack([y_test[idx] for idx in order])
+    labels = np.stack([labels[idx] for idx in order])
+    print(y_prediction.shape)
+    
     corrs = []
     for roi in range(len(labels)):
         y_hat = y_prediction[roi]
@@ -141,14 +153,62 @@ def make_visualization(y_prediction, y_test, labels):
         corr_tmp = corr_metric(y_hat, y_test_roi)
         corrs.append(corr_tmp)
         axi = ax.flat[roi]
-        axi.plot(y_hat, label= 'prediction')
-        axi.plot(y_test_roi, label = 'true')
-
-        axi.set_title("{}_corr {:.2f}".format(labels[roi], corr_tmp))
+        
+        time = np.arange(len(y_hat))/100
+        axi.plot(time, y_hat, label= 'prediction')
+        axi.plot(time, y_test_roi, label = 'true')
+        # axi.set_xlim(0, 60)
+        
+        axi.set_title("{} r = {:.2f}".format(labels[roi], corr_tmp))
+        axi.set_xlabel('Time (s)')
+    for ax in ax.flat:
+        ax.label_outer()
+    fig.tight_layout()
+    
     return fig, corrs
 
+# def make_visualization(y_prediction, y_test, labels):
+#     """
+#     Calculate correlation metrics for each roi between y_pred and y_test.
+#     Visaulize via n_roi plots 
+    
+#     ------
+#     Input:
+#         y_prediction - roi, time, 
+        
+#         y_test - (roi, time) 
+        
+#         labels - list name of roi
+        
+#     Output
+#         fig - bar plot
+#         corrs - list of correaltions.
+#     """
+#     n_roi = y_prediction.shape[0]
+    
+#     fig, ax = plt.subplots(math.ceil(n_roi/3), 3, 
+#                            figsize = (10, int(math.ceil(n_roi/3)*2)),
+#                            dpi=120, sharex=True, sharey=True)
+#     corrs = []
+#     for roi in range(len(labels)):
+#         y_hat = y_prediction[roi]
+#         y_test_roi = y_test[roi]
+#         corr_tmp = corr_metric(y_hat, y_test_roi)
+#         corrs.append(corr_tmp)
+#         axi = ax.flat[roi]
+        
+#         time = np.arange(len(y_hat))/100
+#         axi.plot(time, y_hat, label= 'prediction')
+#         axi.plot(time, y_test_roi, label = 'true')
+#         # axi.set_xlim(0, 60)
+        
+#         # axi.set_xlabel('Time (s)')
 
-
+#         axi.set_title("{} r = {:.2f}".format(labels[roi], corr_tmp))
+#     fig.tight_layout()
+#     return fig, corrs
+    # remove it. Only ones 
+    
 def make_inference_seq_2_seq(model, dataset, device = 'cpu'):
     """
     Make inference for model many2many. So we take sequency of input data and get sequence of output.

@@ -210,7 +210,7 @@ def wanb_train_regression(EPOCHS, model, train_loader, val_loader,
                 # save model in that case. 
                 # save weights
                 filename = "epoch_{}_val_corr{:.2}.pt".format(epoch, np.mean(corrs))
-                filepath_name = os.path.join(run.dir, filename)
+                filepath_name = os.path.join(wandb.run.dir, filename)
                 save_checkpoint_custom(model.state_dict(), filepath_name) 
             
 

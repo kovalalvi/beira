@@ -1,3 +1,7 @@
+
+
+notebook_clean/wandb/
+figures/
 data/
 notebook/wandb/
 utils/old/

@@ -44,7 +44,7 @@ def filter_powerline_noise(data, sf, f=50, **filter_params):
     Notch filter
     """
     harmonic_freqs = np.arange(f, sf//2, f)
-    filtered_data = mne.filter.notch_filter(data, sf, harmonic_freqs, verbose=False)
+    filtered_data = mne.filter.notch_filter(data, sf, harmonic_freqs, verbose=True)
     return filtered_data
 
 
@@ -68,7 +68,6 @@ def normalize_data(data, means_stds=None):
 
     """
     if means_stds is None:
-        # robust to outliers median.
         means = np.mean(data, axis=-1, keepdims=True)
         stds = np.std(data, axis=-1, keepdims=True)
         means_stds = (means, stds)
@@ -84,10 +83,10 @@ def low_level_preproc_eeg(eeg, fps):
     eeg should be size ( n_electrodes, time)
     fps - Hz 
     """
-    eeg_filter = filter_powerline_noise(eeg, sf=fps, verbose=False)
+    eeg_filter = filter_powerline_noise(eeg, sf=fps, verbose=True)
     eeg_filter = mne.filter.filter_data(eeg_filter, sfreq=fps, 
                                         l_freq=1, h_freq=100, 
-                                        verbose=False)
+                                        verbose=True)
     
     common_average = np.mean(eeg_filter, axis=0, keepdims=True)
     eeg_filter = eeg_filter - common_average
