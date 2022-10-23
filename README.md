@@ -1,15 +1,15 @@
 # BEIRA
-
+### [Paper](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
 
 BOLD from EEG Interpretable Regression Autoencoder (BEIRA). 
 
 
-preprint paper - 
 
 
 
 
-Structure.
+
+## Structure.
 **utils** 
   - models_arch/
   - get_datasets.py - Functions for working with raw EEG and fMRI
@@ -24,3 +24,16 @@ Structure.
   - Wav2Vec_AE_CWL_Loss_all.ipynb - It is notebook which I use as template for experiments. 
 
 
+
+
+
+## Citation
+
+```
+@article{hertz2022prompt,
+  title={Prompt-to-Prompt Image Editing with Cross Attention Control},
+  author={Hertz, Amir and Mokady, Ron and Tenenbaum, Jay and Aberman, Kfir and Pritch, Yael and Cohen-Or, Daniel},
+  journal={arXiv preprint arXiv:2208.01626},
+  year={2022}
+}
+```
