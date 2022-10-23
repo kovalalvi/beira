@@ -1,6 +1,10 @@
-# eeg-fmri-project
+# BEIRA
+
+
+BOLD from EEG Interpretable Regression Autoencoder (BEIRA). 
 This is clean and good structure verison of previous eeg fmri repo
 
+preprint paper - 
 
 Structure.
 **utils** 
