@@ -1,8 +1,8 @@
 # BEIRA
 ### [Paper](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
 
-BOLD from EEG Interpretable Regression Autoencoder (BEIRA). 
 
+This repo is the official implementation of "Swin Transformer: Hierarchical Vision Transformer using Shifted Windows". Breakthroug paper which allows t
 
 
 
