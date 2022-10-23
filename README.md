@@ -10,20 +10,24 @@ BOLD from EEG Interpretable Regression Autoencoder (BEIRA).
 
 
 ## Structure.
-**utils** 
-  - models_arch/
-  - get_datasets.py - Functions for working with raw EEG and fMRI
-  - inference.py - Scripts for inference of our model Many2one, many2many and many2many window-based.
-  - preproc.py - Functions for working with raw EEG and fMRI 
-  - torch_dataset.py 
-  - train_utils.py - Function for training, loss_functions and train steps.
 
+## How to start
+For starting training procees you should prepare data.
 
-**notebook** 
-  - CrossCorr_Wav2VecAE_combine.ipynb - It is best model which aggregate cross corr and wavelet features. 
-  - Wav2Vec_AE_CWL_Loss_all.ipynb - It is notebook which I use as template for experiments. 
+    ├── utils 
+    │   ├── models_arch
+    │       ├── move1.npy
+    │   ├── get_datasets.py  - build datasets from raw EEG and fMRI data    
+    │   ├── inference.py - scripts for inference of our models. (there are many2one, many2many and many2many window-based).
+    │   ├── preproc.py - preprocessing functions for raw EEG and fMRI  
+    │   ├── get_datasets.py  - build datasets from raw EEG and fMRI data 
+    │   ├── train_utils.py - all functions for model training, loss_functions
+    └── ...
 
-
+    ├── notebooks 
+    │   ├── train_model.ipynb
+    │   ├── inference_model.ipynb    
+    └── ...
 
 
 
