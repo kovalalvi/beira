@@ -9,7 +9,7 @@ This repo is the official implementation of "Swin Transformer: Hierarchical Visi
 
 
 
-## Structure.
+## Structure
 
 ## How to start
 For starting training procees you should prepare data.
