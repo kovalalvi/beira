@@ -1,5 +1,8 @@
 # BEIRA
-### [Paper](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
+### [[papers with code]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
+
+### [[Paper]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
+### [[Blog]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
 
 
 This repo is the official implementation of "Swin Transformer: Hierarchical Vision Transformer using Shifted Windows". Breakthroug paper which allows t
