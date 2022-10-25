@@ -22,8 +22,7 @@ Here we present an interpretable domain grounded solution to recover the activit
 ![beira_net_arch-1](https://user-images.githubusercontent.com/55140479/197827587-8053d18a-193c-4795-9f0c-0b8fbb3505fe.png)
 
 
-Figure 1: **Left** BOLD from EEG Interpretable Regression Autoencoder. We apply our architecture to a block of raw EEG data. First, the multibranch interpretable feature extraction module estimates physiologically interpretable features that then get compressed by the encoding block to be next unpacked with the decoder into the delayed window of ROI sBOLD activity samples. **Right** Building blocks. We use one layer interpretable compact block and several layers for encoder
-and decoder as outlined in the diagram
+We apply our architecture to a block of raw EEG data. First, the multibranch interpretable feature extraction module estimates physiologically interpretable features that then get compressed by the encoding block to be next unpacked with the decoder into the delayed window of ROI sBOLD activity samples. We use one layer interpretable compact block and several layers for encoder and decoder as outlined in the diagram.
 
 
 ## Results
