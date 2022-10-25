@@ -1,17 +1,20 @@
 # BEIRA: BOLD from EEG Interpretable Regression Autoencoder
-### [[papers with code]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
 
-### [[Paper]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf) [[Blog]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
+[**fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships**](https://ommer-lab.com/research/latent-diffusion-models/)<br/>
+[Alexander Kovalev](https://github.com/kovalalvi)\,
+[Ilya ](https://github.com/ablattmann)\*,
+[Alex Ossadtchi](https://github.com/qp-qp)
+
+#### [[papers with code]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
+
+#### [[Paper]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf) [[Project page]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
+
 
 
 
 This repo is the official implementation of **"fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships"**.
 Here we present an interpretable domain grounded solution to recover the activity of several subcortical regions from the multichannel EEG data and demonstrate **up to
 0.6 correlation** between the actual subcortical blood oxygenation level dependent (sBOLD) signal and its EEG-derived twin.
-
-
-
-
 
 
 
