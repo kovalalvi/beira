@@ -10,7 +10,7 @@
 #### [[Paper]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf) [[Project page]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
 
 
-
+BEIRA: BOLD from EEG Interpretable Regression Autoencoder
 
 This repo is the official implementation of **"fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships"**.
 Here we present an interpretable domain grounded solution to recover the activity of several subcortical regions from the multichannel EEG data and demonstrate **up to
