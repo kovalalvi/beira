@@ -5,7 +5,7 @@
 > [Alexander Kovalev](https://github.com/kovalalvi)\,
 > [Ilya Mikheev]()\*,
 > [Alex Ossadtchi]()
-> #### [[Paper]](https://arxiv.org/pdf/2211.02024) [[Project page]]()
+> #### [[Paper]](https://arxiv.org/abs/2211.02024v1) [[Project page]]()
 > **BEIRA** -  domain grounded interpretable convolutional model for predicting subcortical BOLD singals from EEG activity.
 
 
