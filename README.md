@@ -1,14 +1,12 @@
-# BEIRA: BOLD from EEG Interpretable Regression Autoencoder
+## BEIRA: BOLD from EEG Interpretable Regression Autoencoder
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/fmri-from-eeg-is-only-deep-learning-away-the/eeg-decoding-on-cwl-eeg-fmri-dataset)](https://paperswithcode.com/sota/eeg-decoding-on-cwl-eeg-fmri-dataset?p=fmri-from-eeg-is-only-deep-learning-away-the)
 
-#### [**fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships**](https://arxiv.org/abs/2211.02024)<br/>
-[Alexander Kovalev](https://github.com/kovalalvi)\,
-[Ilya Mikheev]()\*,
-[Alex Ossadtchi]()
-
-#### [[Paper]](https://arxiv.org/pdf/2211.02024.pdf) [[Project page]]()
-
-BEIRA: BOLD from EEG Interpretable Regression Autoencoder is domain grounded interpretable convolutional model for predicting subcortical BOLD singals from EEG activity.
+> #### [**fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships**](https://arxiv.org/abs/2211.02024)<br/>
+> [Alexander Kovalev](https://github.com/kovalalvi)\,
+> [Ilya Mikheev]()\*,
+> [Alex Ossadtchi]()
+> #### [[Paper]](https://arxiv.org/pdf/2211.02024.pdf) [[Project page]]()
+> **BEIRA** -  domain grounded interpretable convolutional model for predicting subcortical BOLD singals from EEG activity.
 
 
 ## Abstract 
