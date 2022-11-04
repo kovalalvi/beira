@@ -14,9 +14,10 @@
 The access to activity of subcortical structures offers unique opportunity for building intention dependent brain-computer interfaces, renders abundant options for exploring a broad range of cognitive phenomena in the realm of affective neuroscience including complex decision making processes and the eternal free-will dilemma and facilitates diagnostics of a range of neurological deceases. So far this was possible only using bulky, expensive and immobile fMRI equipment. Here we present an interpretable domain grounded solution to recover the activity of several subcortical regions from the multichannel EEG data and demonstrate up to 60% correlation between the actual subcortical blood oxygenation level dependent sBOLD signal and its EEG-derived twin. Then, using the novel and theoretically justified weight interpretation methodology we recover individual spatial and time-frequency patterns of scalp EEG predictive of the hemodynamic signal in the subcortical nuclei. The described results not only pave the road towards wearable subcortical activity scanners but also showcase an automatic knowledge discovery process facilitated by deep learning technology in combination with an interpretable domain constrained architecture and the appropriate downstream task.
 
 ## Approach
-![beira_net_arch-1](https://user-images.githubusercontent.com/55140479/197827587-8053d18a-193c-4795-9f0c-0b8fbb3505fe.png)
-
-
+<!-- ![beira_net_arch-1](https://user-images.githubusercontent.com/55140479/197827587-8053d18a-193c-4795-9f0c-0b8fbb3505fe.png) -->
+<p align="center">
+ <img src="https://user-images.githubusercontent.com/55140479/197827587-8053d18a-193c-4795-9f0c-0b8fbb3505fe.png" alt="drawing"  width="600" />
+</p>
 We apply our architecture to a block of raw EEG data. First, the multibranch interpretable feature extraction module estimates physiologically interpretable features that then get compressed by the encoding block to be next unpacked with the decoder into the delayed window of ROI sBOLD activity samples. We use one layer interpretable compact block and several layers for encoder and decoder as outlined in the diagram.
 
 
