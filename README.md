@@ -7,7 +7,7 @@
 
 #### [[papers with code]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
 
-#### [[Paper]](https://arxiv.org/pdf/2211.02024.pdf) [[Project page]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
+#### [[Paper]](https://arxiv.org/pdf/2211.02024.pdf) [[Project page]]()
 
 
 BEIRA: BOLD from EEG Interpretable Regression Autoencoder
