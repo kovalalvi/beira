@@ -1,13 +1,13 @@
 # BEIRA: BOLD from EEG Interpretable Regression Autoencoder
 
-[**fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships**](https://ommer-lab.com/research/latent-diffusion-models/)<br/>
+[**fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships**](https://arxiv.org/abs/2211.02024)<br/>
 [Alexander Kovalev](https://github.com/kovalalvi)\,
-[Ilya ](https://github.com/ablattmann)\*,
-[Alex Ossadtchi](https://github.com/qp-qp)
+[Ilya ]()\*,
+[Alex Ossadtchi]()
 
 #### [[papers with code]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
 
-#### [[Paper]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf) [[Project page]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
+#### [[Paper]](https://arxiv.org/pdf/2211.02024.pdf) [[Project page]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
 
 
 BEIRA: BOLD from EEG Interpretable Regression Autoencoder
@@ -57,10 +57,10 @@ For starting training procees you should prepare data.
 ## Citation
 
 ```
-@article{hertz2022prompt,
+@article{beira2022,
   title={fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships},
-  author={Hertz, Amir and Mokady, Ron and Tenenbaum, Jay and Aberman, Kfir and Pritch, Yael and Cohen-Or, Daniel},
-  journal={arXiv preprint arXiv:2208.01626},
+  author={Kovalev, Alexander and Mikheev, Ilia and Ossadtchi, Alexei},
+  journal={arXiv preprint arXiv:2211.02024},
   year={2022}
 }
 ```
