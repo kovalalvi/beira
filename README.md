@@ -1,22 +1,19 @@
 # BEIRA: BOLD from EEG Interpretable Regression Autoencoder
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/fmri-from-eeg-is-only-deep-learning-away-the/eeg-decoding-on-cwl-eeg-fmri-dataset)](https://paperswithcode.com/sota/eeg-decoding-on-cwl-eeg-fmri-dataset?p=fmri-from-eeg-is-only-deep-learning-away-the)
 
-[**fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships**](https://arxiv.org/abs/2211.02024)<br/>
+#### [**fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships**](https://arxiv.org/abs/2211.02024)<br/>
 [Alexander Kovalev](https://github.com/kovalalvi)\,
 [Ilya Mikheev]()\*,
 [Alex Ossadtchi]()
 
-#### [[papers with code]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
-
 #### [[Paper]](https://arxiv.org/pdf/2211.02024.pdf) [[Project page]]()
 
-
-BEIRA: BOLD from EEG Interpretable Regression Autoencoder
-
-This repo is the official implementation of **"fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships"**.
-Here we present an interpretable domain grounded solution to recover the activity of several subcortical regions from the multichannel EEG data and demonstrate **up to
-0.6 correlation** between the actual subcortical blood oxygenation level dependent (sBOLD) signal and its EEG-derived twin.
+BEIRA: BOLD from EEG Interpretable Regression Autoencoder is domain grounded interpretable convolutional model for predicting subcortical BOLD singals from EEG activity.
 
 
+## Abstract 
+
+The access to activity of subcortical structures offers unique opportunity for building intention dependent brain-computer interfaces, renders abundant options for exploring a broad range of cognitive phenomena in the realm of affective neuroscience including complex decision making processes and the eternal free-will dilemma and facilitates diagnostics of a range of neurological deceases. So far this was possible only using bulky, expensive and immobile fMRI equipment. Here we present an interpretable domain grounded solution to recover the activity of several subcortical regions from the multichannel EEG data and demonstrate up to 60% correlation between the actual subcortical blood oxygenation level dependent sBOLD signal and its EEG-derived twin. Then, using the novel and theoretically justified weight interpretation methodology we recover individual spatial and time-frequency patterns of scalp EEG predictive of the hemodynamic signal in the subcortical nuclei. The described results not only pave the road towards wearable subcortical activity scanners but also showcase an automatic knowledge discovery process facilitated by deep learning technology in combination with an interpretable domain constrained architecture and the appropriate downstream task.
 
 ## Approach
 ![beira_net_arch-1](https://user-images.githubusercontent.com/55140479/197827587-8053d18a-193c-4795-9f0c-0b8fbb3505fe.png)
