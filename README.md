@@ -2,7 +2,7 @@
 
 [**fMRI from EEG is only Deep Learning away: the use of interpretable DL to unravel EEG-fMRI relationships**](https://arxiv.org/abs/2211.02024)<br/>
 [Alexander Kovalev](https://github.com/kovalalvi)\,
-[Ilya ]()\*,
+[Ilya Mikheev]()\*,
 [Alex Ossadtchi]()
 
 #### [[papers with code]](https://prompt-to-prompt.github.io/ptp_files/Prompt-to-Prompt_preprint.pdf)
