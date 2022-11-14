@@ -26,7 +26,9 @@ CWL EEG/fMRI Dataset. Concurrently recording of EEG and fMRI data - [dataset lin
 
 
 <!-- ![ts_best_plots-1](https://user-images.githubusercontent.com/55140479/197828892-6b4993a7-9baa-4462-87d6-516f85d93dad.png) -->
-<img src="https://user-images.githubusercontent.com/55140479/197828892-6b4993a7-9baa-4462-87d6-516f85d93dad.png" alt="drawing" width="600"/>
+<p align="center">
+ <img src="https://user-images.githubusercontent.com/55140479/197828892-6b4993a7-9baa-4462-87d6-516f85d93dad.png" alt="drawing" width="600"/>
+</p>
 Figure 2. Real and predicted sBOLD time series of different RoI for one patient from CWL dataset: pallidum, caudate, putamen, accumbens. Yellow is real, blue is prediction. x axis - Time seconds. y axis - sBOLD activity
 
 
