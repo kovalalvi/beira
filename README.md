@@ -16,7 +16,7 @@ The access to activity of subcortical structures offers unique opportunity for b
 ## Approach
 <!-- ![beira_net_arch-1](https://user-images.githubusercontent.com/55140479/197827587-8053d18a-193c-4795-9f0c-0b8fbb3505fe.png) -->
 <p align="center">
- <img src="https://user-images.githubusercontent.com/55140479/197827587-8053d18a-193c-4795-9f0c-0b8fbb3505fe.png" alt="drawing"  width="600" />
+ <img src="https://user-images.githubusercontent.com/55140479/197827587-8053d18a-193c-4795-9f0c-0b8fbb3505fe.png" alt="drawing"  width="800" />
 </p>
 We apply our architecture to a block of raw EEG data. First, the multibranch interpretable feature extraction module estimates physiologically interpretable features that then get compressed by the encoding block to be next unpacked with the decoder into the delayed window of ROI sBOLD activity samples. We use one layer interpretable compact block and several layers for encoder and decoder as outlined in the diagram.
 
