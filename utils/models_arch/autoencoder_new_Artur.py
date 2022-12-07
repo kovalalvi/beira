@@ -226,9 +226,9 @@ class AutoEncoder1D_Artur_MultiHead(nn.Module):
         
         dict_setting_new.pop('n_channels_out')
         
-        print('HOW: ', dict_setting)
+        # print('HOW: ', dict_setting)
         self.models = nn.ModuleList([AutoEncoder1D_Artur(n_channels_out = 1,**dict_setting_new) for i in range(self.n_channels_out)])
-        print('HUI', len(self.models))
+        # print('HUI', len(self.models))
         
         
     def forward(self, x):
