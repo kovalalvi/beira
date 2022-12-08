@@ -5,7 +5,7 @@
 > [Alexander Kovalev](https://github.com/kovalalvi)\,
 > [Ilya Mikheev]()\*,
 > [Alex Ossadtchi]()
-> #### [[Paper]](https://arxiv.org/abs/2211.02024v1) [[Project page]]()
+> #### [[Paper]](https://arxiv.org/abs/2211.02024v1)
 > **BEIRA** -  domain grounded interpretable convolutional model for predicting subcortical BOLD singals from EEG activity.
 
 
@@ -33,11 +33,19 @@ Figure 2. Real and predicted sBOLD time series of different RoI for one patient 
 
 
 ## How to start
-For starting training procees you should prepare data.
+For starting training procees you need to download data from CWL dataset
+
+1. Clone repository and create env via env file 
+2. Download data and move to data folder in your repository.
+3. Run  BEIRA_ALL_IN_ONE.ipynb for model training. All result will be logged in wandb.
+4. Run BEIRA_inference and get the best model in wandb folder and provide interpretation. 
+
+Description of the repository. You can modify each step.
+
 
     ├── utils 
     │   ├── models_arch
-    │       ├── move1.npy
+    │       ├── autoencoder_new_Artur.py - BEIRA architecture.
     │   ├── get_datasets.py  - build datasets from raw EEG and fMRI data    
     │   ├── inference.py - scripts for inference of our models. (there are many2one, many2many and many2many window-based).
     │   ├── preproc.py - preprocessing functions for raw EEG and fMRI  
@@ -45,9 +53,9 @@ For starting training procees you should prepare data.
     │   ├── train_utils.py - all functions for model training, loss_functions
     └── ...
 
-    ├── notebooks 
-    │   ├── train_model.ipynb
-    │   ├── inference_model.ipynb    
+    ├── notebook_clean
+    │   ├── BEIRA_ALL_IN_ONE.ipynb - prepare data and start training.
+    │   ├── BEIRA_inference.ipynb - provide visualization and interpretation of the trained model.
     └── ...
 
 
