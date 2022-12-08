@@ -165,6 +165,11 @@ def make_visualization(y_prediction, y_test, labels):
         ax.label_outer()
     fig.tight_layout()
     
+    
+    # to original order.
+    to_orig_order = np.argsort(order)
+    corrs = [corrs[idx] for idx in to_orig_order]
+    
     return fig, corrs
 
 # def make_visualization(y_prediction, y_test, labels):
